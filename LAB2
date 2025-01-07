@@ -1,0 +1,90 @@
+*Dockerizing a Python script*
+This project involves containerizing a simple Python script that processes data from a CSV file using the pandas library. The goal is to learn how to manage dependencies and execute Python scripts inside Docker containers, making the script portable and executable in any environment.
+### *1. Prepare Your Directory*
+
+Create a project directory with the following structure:
+
+project-directory/ ├── process_data.py ├── requirements.txt ├── Dockerfile ├── data/     └── data.csv
+
+*Commands to set it up:*
+
+mkdir project-directory cd project-directory mkdir data
+
+---
+
+### *2. Write Your Python Script*
+
+Create the process_data.py file:
+
+vim process_data.py
+
+Add the following code:
+import pandas as pd  df = pd.read_csv('data/data.csv') print(df.describe())
+
+Save the file and exit.
+
+---
+
+### **3. Create the requirements.txt**
+
+Create a requirements.txt file:
+
+vim requirements.txt
+
+Add the following:
+
+pandas
+
+Save the file and exit.
+
+---
+
+### *4. Add a Sample CSV File*
+
+Place a sample data.csv file in the data/ directory. Create the file:
+
+vim data/data.csv
+
+Add some sample data:
+
+Name,Age,Score Alice,30,85 Bob,25,90 Charlie,35,88
+
+Save the file and exit.
+
+---
+
+### *5. Write the Dockerfile*
+
+Create the Dockerfile:
+
+vim Dockerfile
+
+Add the following:
+
+dockerfile
+
+FROM python:3.9-slim  WORKDIR /app  COPY requirements.txt . RUN pip install -r requirements.txt  COPY . .  CMD ["python", "process_data.py"]
+
+Save the file and exit.
+
+---
+
+### *6. Build the Docker Image*
+
+Build the image with a simple command:
+
+docker build -t python-script .
+
+If successful, you should see:
+
+Successfully built <image-id> Successfully tagged python-script:latest
+
+---
+
+### *7. Run the Container*
+
+Run the container with the CSV file mounted as a volume:
+
+docker run -v $(pwd)/data:/app/data python-script
+
+You should see output summarizing the data from data.csv.
